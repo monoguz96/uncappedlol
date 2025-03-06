@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill-Capped Downloader</title>
+  <style>
+    :root {
+      --bg-primary: #0F172A;
+      --bg-secondary: #1E293B;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --accent: #8B5CF6;
+      --accent-hover: #7C3AED;
+      --progress-bg: #2D3B54;
+      --gold: #FFD700;
+      --link-color: #00CED1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: linear-gradient(135deg, 
+        #0F172A 0%,
+        #1A237E 25%,
+        #1E1E2F 50%,
+        #1A237E 75%,
+        #0F172A 100%
+      );
+      position: relative;
+    }
+
+    .container {
+      background-color: rgba(30, 41, 59, 0.95);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                  0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .title-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .attribution {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .attribution a {
+      color: var(--link-color);
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+
+    .attribution a:hover {
+      color: var(--link-color);
+      text-decoration: underline;
+      opacity: 0.8;
+    }
+
+    .gold-text {
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--progress-bg);
+      border: 1px solid #4B5563;
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    button:hover {
+      background-color: var(--accent-hover);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .progress-container {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .progress-container.active {
+      display: block;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: var(--progress-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    .download-btn {
+      display: none;
+      margin-top: 1rem;
+      background-color: #10B981;
+    }
+
+    .download-btn:hover {
+      background-color: #059669;
+    }
+
+    .download-btn.active {
+      display: flex;
+    }
+
+    .error {
+      color: #EF4444;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .error.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title-container">
+      <h1 class="title">
+        Skill-Capped Downloader
+      </h1>
+      <div class="attribution">
+        Idea taken from <a href="https://www.elitepvpers.com/forum/wow-guides-templates/4314622-skill-capped-videos-free-5.html" target="_blank">one of the threads on ePVP</a><br>
+        Special thanks to <span class="gold-text">Colt45RPM</span> for providing the original PowerShell code.<br>
+        ✨ All credit goes to him. ✨
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label for="viduuid">Video UUID (ID) 🎯</label>
+      <input type="text" id="viduuid" placeholder="Enter video UUID">
+    </div>
+    
+    <div class="input-group">
+      <label for="vidtitle">Video Title 📝</label>
+      <input type="text" id="vidtitle" placeholder="Enter video title">
+    </div>
+    
+    <button id="downloadBtn">
+      <span>Start Download</span>
+      <span>⚡</span>
+    </button>
+
+    <div class="error" id="error"></div>
+    
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">0% Complete</div>
+    </div>
+
+    <button id="finalDownloadBtn" class="download-btn">
+      <span>Download Video</span>
+      <span>⬇️</span>
+    </button>
+  </div>
+  
+  <script>
+    const downloadBtn = document.getElementById('downloadBtn');
+    const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const errorDiv = document.getElementById('error');
+
+    downloadBtn.addEventListener('click', async function() {
+      const viduuid = document.getElementById('viduuid').value.trim();
+      const vidtitle = document.getElementById('vidtitle').value.trim();
+      
+      if (!viduuid || !vidtitle) {
+        errorDiv.textContent = '⚠️ Please enter both the video UUID and title';
+        errorDiv.classList.add('active');
+        return;
+      }
+
+      errorDiv.classList.remove('active');
+      downloadBtn.disabled = true;
+      finalDownloadBtn.classList.remove('active');
+      progressContainer.classList.add('active');
+      progressFill.style.width = '0%';
+      progressText.textContent = 'Checking video segments...';
+      
+      const segments = [];
+      let downloadUrl = '';
+
+      // First, let's find out how many segments exist
+      let totalSegments = 0;
+      for (let i = 1; i < 9999; i++) {
+        const vidnum = String(i).padStart(5, '0');
+        const vidurl = `https://d13z5uuzt1wkbz.cloudfront.net/${viduuid}/HIDDEN4500-${vidnum}.ts`;
+        
+        try {
+          const response = await fetch(vidurl, { method: 'HEAD' });
+          if (!response.ok) {
+            break;
+          }
+          totalSegments = i;
+        } catch (error) {
+          break;
+        }
+      }
+
+      if (totalSegments === 0) {
+        errorDiv.textContent = '❌ No video segments found';
+        errorDiv.classList.add('active');
+        downloadBtn.disabled = false;
+        progressContainer.classList.remove('active');
+        return;
+      }
+
+      progressText.textContent = `Found ${totalSegments} segments. Starting download...`;
+
+      // Now download all segments with accurate progress
+      for (let i = 1; i <= totalSegments; i++) {
+        const vidnum = String(i).padStart(5, '0');
+        const vidurl = `https://d13z5uuzt1wkbz.cloudfront.net/${viduuid}/HIDDEN4500-${vidnum}.ts`;
+        
+        try {
+          const response = await fetch(vidurl);
+          if (!response.ok) {
+            throw new Error(`Failed to download segment ${i}`);
+          }
+          const arrayBuffer = await response.arrayBuffer();
+          segments.push(arrayBuffer);
+          
+          // Update progress based on current segment vs total segments
+          const progress = (i / totalSegments) * 100;
+          progressFill.style.width = `${progress}%`;
+          progressText.textContent = `Downloading: ${Math.round(progress)}% (${i}/${totalSegments})`;
+        }
+        catch (error) {
+          errorDiv.textContent = `❌ Error downloading segment ${i}: ${error.message}`;
+          errorDiv.classList.add('active');
+          downloadBtn.disabled = false;
+          return;
+        }
+      }
+      
+      if (segments.length > 0) {
+        progressText.textContent = 'Preparing final video file...';
+        
+        // Combine the segments into one Blob
+        const blob = new Blob(segments, { type: "video/mp2t" });
+        downloadUrl = URL.createObjectURL(blob);
+        
+        // Show download button
+        finalDownloadBtn.classList.add('active');
+        progressText.textContent = `Ready to download! 🎉 (${segments.length} segments combined)`;
+      } else {
+        errorDiv.textContent = '❌ No segments were downloaded';
+        errorDiv.classList.add('active');
+      }
+      
+      downloadBtn.disabled = false;
+
+      // Setup final download button
+      finalDownloadBtn.onclick = () => {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${vidtitle}.mp4`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+    });
+  </script>
+</body>
+</html>
