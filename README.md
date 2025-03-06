@@ -15,3 +15,9 @@ Tutorial:
 5. SUPPER IMPORTANT: Activate the CORS extension by clicking on the icon on the extensions bar
    
 7. Enjoy !
+
+
+WHERES THE ID?
+
+![image](https://github.com/user-attachments/assets/26cb1cbc-bd0f-4e5d-9fb2-f5119a57c00c)
+
