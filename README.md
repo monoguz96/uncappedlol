@@ -17,6 +17,10 @@ Tutorial:
 7. Enjoy !
 
 
+
+   
+TROUBLESHOOTING:
+
 WHERES THE ID?
 
 ![image](https://github.com/user-attachments/assets/26cb1cbc-bd0f-4e5d-9fb2-f5119a57c00c)
